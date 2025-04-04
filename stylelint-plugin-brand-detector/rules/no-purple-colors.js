@@ -1,12 +1,12 @@
 /**
- * @fileoverview StyleLint rule to detect purple hex colors in CSS/SCSS files
+ * @fileoverview StyleLint rule to detect purple hex colors and suggest brand variables
  * @author YourName
  */
 "use strict";
 
 const stylelint = require("stylelint");
 const valueParser = require("postcss-value-parser");
-const { BRAND_COLORS, isPurpleHex } = require("../../consts/colors");
+const { BRAND_COLORS, isPurpleHex } = require("../consts/colors");
 
 const ruleName = "brand-detector/no-purple-colors";
 const messages = stylelint.utils.ruleMessages(ruleName, {
@@ -14,15 +14,23 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 });
 
 // Define rule function
-function rule(primary) {
+function rule(primaryOption, secondaryOptions) {
   return (root, result) => {
     const validOptions = stylelint.utils.validateOptions(result, ruleName, {
-      actual: primary
+      actual: primaryOption
+    }, {
+      actual: secondaryOptions,
+      possible: {
+        brandColors: ['object'],
+      },
+      optional: true,
     });
 
     if (!validOptions) {
       return;
     }
+
+    const brandColorsConfig = (secondaryOptions && secondaryOptions.brandColors) || BRAND_COLORS;
 
     // Process all declarations in the CSS/SCSS
     root.walkDecls(decl => {
@@ -51,7 +59,7 @@ function rule(primary) {
         const hexColor = node.value.toLowerCase();
 
         // Skip known brand colors (they're handled by the other rule)
-        if (BRAND_COLORS[hexColor]) {
+        if (brandColorsConfig[hexColor]) {
           return;
         }
 
@@ -81,7 +89,6 @@ rule.ruleName = ruleName;
 rule.messages = messages;
 rule.meta = {
   url: "https://github.com/yourusername/stylelint-purple-detector",
-  fixable: false // This rule only detects, doesn't fix
 };
 
 module.exports = stylelint.createPlugin(ruleName, rule);

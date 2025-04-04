@@ -1,4 +1,4 @@
-name: Auto Publish on Main Merge
+name: Auto Patch and Publish on Main Merge
 
 on:
   push:
@@ -20,20 +20,35 @@ jobs:
           node-version: 'lts/*'
           registry-url: 'https://npm.pkg.github.com'
 
-      - name: Determine version bump and publish ESLint plugin
-        id: publish-eslint
-        working-directory: ./eslint-plugin-brand-detector
+      - name: Install dependencies (root)
+        run: npm install # Install any root-level dev dependencies if you have them
+
+      - name: Patch and Publish ESLint plugin
+        working-directory: ./packages/eslint-plugin-brand-detector
         run: |
-          npm install
+          npm version patch --no-git-tag-version
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add package.json
+          git commit -m "chore(release): bump eslint version to $(jq -r .version package.json)"
+          npm install # Install plugin-specific dependencies
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
 
-      - name: Determine version bump and publish Stylelint plugin
-        id: publish-stylelint
-        working-directory: ./stylelint-plugin-brand-detector
+      - name: Patch and Publish Stylelint plugin
+        working-directory: ./packages/stylelint-plugin-brand-detector
         run: |
-          npm install
+          npm version patch --no-git-tag-version
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add package.json
+          git commit -m "chore(release): bump stylelint version to $(jq -r .version package.json)"
+          npm install # Install plugin-specific dependencies
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
+
+      - name: Push changes
+        run: |
+          git push origin main

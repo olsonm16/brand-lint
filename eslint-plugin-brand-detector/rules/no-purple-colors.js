@@ -5,7 +5,7 @@
 
 "use strict";
 
-const { BRAND_COLORS, isPurpleHex } = require("../../consts/colors");
+const { BRAND_COLORS, isPurpleHex } = require("../consts/colors");
 
 // Regular expression to match 6-digit hex colors
 const HEX_COLOR_REGEX = /#([0-9a-f]{6})\b/gi;
@@ -20,7 +20,21 @@ module.exports = {
     },
     hasSuggestions: true, // Use suggestions instead of fixes
     fixable: null,
-    schema: []
+    schema: [
+      {
+        type: "object",
+        properties: {
+          brandColors: {
+            type: "object",
+            description: "Object of brand colors and their CSS variable replacements.",
+            additionalProperties: {
+              type: "string",
+            },
+          },
+        },
+        additionalProperties: false,
+      },
+    ]
   },
 
   create: function (context) {
@@ -33,6 +47,9 @@ module.exports = {
     if (!isStylesheet && !isTSX) {
       return {};
     }
+
+    const options = context.options[0] || {};
+    const brandColorsConfig = options.brandColors || BRAND_COLORS;
 
     return {
       Literal(node) {
@@ -48,7 +65,7 @@ module.exports = {
           const hexColor = match[0].toLowerCase();
 
           // Check if it's a brand color (exact match)
-          if (BRAND_COLORS[hexColor]) {
+          if (brandColorsConfig[hexColor]) {
             return;
           }
           // Otherwise check if it's a purple color

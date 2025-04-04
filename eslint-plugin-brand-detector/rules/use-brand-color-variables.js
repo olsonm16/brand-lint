@@ -5,7 +5,7 @@
 
 "use strict";
 
-const { BRAND_COLORS } = require("../../consts/colors");
+const { BRAND_COLORS } = require("../consts/colors");
 
 // Regular expression to match 6-digit hex colors
 const HEX_COLOR_REGEX = /#([0-9a-f]{6})\b/gi;
@@ -20,10 +20,27 @@ module.exports = {
     },
     hasSuggestions: true, // Use suggestions instead of fixes
     fixable: null,
-    schema: []
+    schema: [
+      {
+        type: "object",
+        properties: {
+          brandColors: {
+            type: "object",
+            description: "Object of brand colors and their CSS variable replacements.",
+            additionalProperties: {
+              type: "string",
+            },
+          },
+        },
+        additionalProperties: false,
+      },
+    ],
   },
 
   create: function (context) {
+    const options = context.options[0] || {};
+    const brandColorsConfig = options.brandColors || BRAND_COLORS;
+
     // Get the file extension to determine how to process it
     const filename = context.getFilename();
     const isStylesheet = /\.(css|scss)$/i.test(filename);
@@ -48,20 +65,17 @@ module.exports = {
           const hexColor = match[0].toLowerCase();
 
           // Check if it's a brand color (exact match)
-          if (BRAND_COLORS[hexColor]) {
+          if (brandColorsConfig[hexColor]) {
             context.report({
               node,
-              message: `Found brand color ${hexColor} that should use CSS variable ${BRAND_COLORS[hexColor]}.`,
+              message: `Found brand color ${hexColor} that should use CSS variable ${brandColorsConfig[hexColor]}.`,
               suggest: [
                 {
-                  desc: `Replace with ${BRAND_COLORS[hexColor]}`,
+                  desc: `Replace with ${brandColorsConfig[hexColor]}`,
                   fix: function (fixer) {
-                    return fixer.replaceText(node, `"${value.replace(match[0], BRAND_COLORS[hexColor])}"`);
+                    return fixer.replaceText(node, `"${value.replace(match[0], brandColorsConfig[hexColor])}"`);
                   }
                 }],
-              /*fix(fixer) {
-                return fixer.replaceText(node, `"${value.replace(match[0], BRAND_COLORS[hexColor])}"`);
-              }*/
             });
           }
         }

@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "test.js",
+  "files": [
+    "index.js",
+    "rules",
+    "../consts"
+  ],
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

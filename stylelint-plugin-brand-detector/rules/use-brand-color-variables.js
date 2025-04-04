@@ -1,21 +1,23 @@
 const stylelint = require('stylelint');
 const valueParser = require('postcss-value-parser');
 const ruleName = 'brand-detector/use-brand-color-variables';
-const { BRAND_COLORS } = require("../../consts/colors");
+
+const { BRAND_COLORS } = require("../consts/colors");
 
 const messages = stylelint.utils.ruleMessages(ruleName, {
   found: (color, replacement) =>
     `Unexpected hardcoded color ${color}. Replace with ${replacement}.`
 });
 
-// Rule function
-const ruleFunction = () => {
+
+const ruleFunction = (primaryOption, secondaryOptions, context) => {
+  const brandColorsConfig = (secondaryOptions && secondaryOptions.brandColors) || BRAND_COLORS;
   return (root, result) => {
     root.walkDecls(decl => {
       const parsedValue = valueParser(decl.value);
       parsedValue.walk((node) => {
         if (node.type === "word") {
-          Object.entries(BRAND_COLORS).forEach(([hardcodedColor, recommendedColor]) => {
+          Object.entries(brandColorsConfig).forEach(([hardcodedColor, recommendedColor]) => {
             if (node.value === hardcodedColor) {
               stylelint.utils.report({
                 result,
