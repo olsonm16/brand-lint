@@ -25,7 +25,7 @@ jobs:
         working-directory: ./eslint-plugin-brand-detector
         run: |
           npm install
-          npm publish
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
 
@@ -34,6 +34,6 @@ jobs:
         working-directory: ./stylelint-plugin-brand-detector
         run: |
           npm install
-          npm publish
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
