@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write # Grant write permission to the contents of the repository
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -31,7 +34,7 @@ jobs:
           npm install # Install plugin-specific dependencies
           npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Patch and Publish Stylelint plugin
         working-directory: ./stylelint-plugin-brand-detector
@@ -44,7 +47,7 @@ jobs:
           npm install # Install plugin-specific dependencies
           npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Push changes
         run: |
