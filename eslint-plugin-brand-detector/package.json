@@ -1,6 +1,6 @@
 {
   "name": "@olsonm16/eslint-plugin-brand-detector",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ESLint plugin to detect branding colors and other content in code",
   "main": "index.js",
   "author": "olsonm16",
