@@ -21,16 +21,16 @@ function rule(primaryOption, secondaryOptions) {
     }, {
       actual: secondaryOptions,
       possible: {
-        brandColors: ['object'],
+        brandColors: (option) => typeof option === 'object' || option == null || option == undefined,
         severity: ['warning', 'error'],
       },
       optional: ['severity', 'brandColors'],
     });
 
     if (!validOptions) {
+      console.log(validOptions);
       return;
     }
-
     const brandColorsConfig = (secondaryOptions && secondaryOptions.brandColors) || BRAND_COLORS;
 
     // Process all declarations in the CSS/SCSS
