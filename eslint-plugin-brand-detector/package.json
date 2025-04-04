@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "ESLint plugin to detect branding colors and other content in code",
   "main": "index.js",
+  "author": "olsonm16",
+  "license": "MIT",
   "peerDependencies": {
     "eslint": ">=7.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/",
+    "access": "public"
   }
 }

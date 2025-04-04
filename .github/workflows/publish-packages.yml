@@ -1,0 +1,66 @@
+name: Auto Publish on Main Merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to analyze commit history
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependencies (root)
+        run: npm install
+
+      - name: Determine version bump and publish ESLint plugin
+        id: publish-eslint
+        working-directory: ./packages/eslint-plugin-my-eslint-rules
+        run: |
+          git log --oneline -n 1 HEAD | grep -q '\[major\]' && echo "BUMP=major" >> $GITHUB_ENV
+          git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
+          [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
+
+          npm version ${{ env.BUMP }} --no-git-tag-version
+
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add package.json
+          git commit -m "chore(release): bump version to $(jq -r .version package.json)"
+
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine version bump and publish Stylelint plugin
+        id: publish-stylelint
+        working-directory: ./packages/stylelint-plugin-my-stylelint-rules
+        run: |
+          git log --oneline -n 1 HEAD | grep -q '\[major\]' && echo "BUMP=major" >> $GITHUB_ENV
+          git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
+          [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
+
+          npm version ${{ env.BUMP }} --no-git-tag-version
+
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add package.json
+          git commit -m "chore(release): bump version to $(jq -r .version package.json)"
+
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push changes
+        run: |
+          git push origin main
