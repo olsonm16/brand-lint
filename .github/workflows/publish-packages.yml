@@ -20,11 +20,8 @@ jobs:
           node-version: 'lts/*'
           registry-url: 'https://npm.pkg.github.com'
 
-      - name: Install dependencies (root)
-        run: npm install # Install any root-level dev dependencies if you have them
-
       - name: Patch and Publish ESLint plugin
-        working-directory: ./packages/eslint-plugin-brand-detector
+        working-directory: ./eslint-plugin-brand-detector
         run: |
           npm version patch --no-git-tag-version
           git config --local user.email "actions@github.com"
@@ -37,7 +34,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PUBLISH_PAT }}
 
       - name: Patch and Publish Stylelint plugin
-        working-directory: ./packages/stylelint-plugin-brand-detector
+        working-directory: ./stylelint-plugin-brand-detector
         run: |
           npm version patch --no-git-tag-version
           git config --local user.email "actions@github.com"
