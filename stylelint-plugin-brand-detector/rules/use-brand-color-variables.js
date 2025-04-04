@@ -11,22 +11,23 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 
 
 const ruleFunction = (primaryOption, secondaryOptions, context) => {
-  const validOptions = stylelint.utils.validateOptions(result, ruleName, {
-    actual: primaryOption
-  }, {
-    actual: secondaryOptions,
-    possible: {
-      brandColors: ['object'],
-      severity: ['warning', 'error'],
-    },
-    optional: ['severity', 'brandColors'],
-  });
-
-  if (!validOptions) {
-    return;
-  }
-  const brandColorsConfig = (secondaryOptions && secondaryOptions.brandColors) || BRAND_COLORS;
   return (root, result) => {
+    const validOptions = stylelint.utils.validateOptions(result, ruleName, {
+      actual: primaryOption
+    }, {
+      actual: secondaryOptions,
+      possible: {
+        brandColors: ['object'],
+        severity: ['warning', 'error'],
+      },
+      optional: ['severity', 'brandColors'],
+    });
+
+    if (!validOptions) {
+      return;
+    }
+    const brandColorsConfig = (secondaryOptions && secondaryOptions.brandColors) || BRAND_COLORS;
+
     root.walkDecls(decl => {
       const parsedValue = valueParser(decl.value);
       parsedValue.walk((node) => {
