@@ -41,16 +41,6 @@ module.exports = {
     const options = context.options[0] || {};
     const brandColorsConfig = options.brandColors || BRAND_COLORS;
 
-    // Get the file extension to determine how to process it
-    const filename = context.getFilename();
-    const isStylesheet = /\.(css|scss)$/i.test(filename);
-    const isTSX = /\.tsx$/i.test(filename);
-
-    // Skip files that aren't CSS, SCSS, or TSX
-    if (!isStylesheet && !isTSX) {
-      return {};
-    }
-
     return {
       Literal(node) {
         if (typeof node.value !== 'string') return;
