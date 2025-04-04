@@ -1,5 +1,5 @@
 {
-  "name": "@olsonm16/eslint-plugin-brand-detector",
+  "name": "@olsonm16/brand-lint-eslint-plugin-brand-detector",
   "version": "1.0.4",
   "description": "ESLint plugin to detect branding colors and other content in code",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "eslint": ">=7.0.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/",
+    "registry": "https://npm.pkg.github.com/olsonm16",
     "access": "public"
   }
 }
