@@ -24,17 +24,8 @@ jobs:
         id: publish-eslint
         working-directory: ./eslint-plugin-brand-detector
         run: |
-          git log --oneline -n 1 HEAD | grep -q '\[major\]' && echo "BUMP=major" >> $GITHUB_ENV
-          git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
-          [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
-
-          npm version ${{ env.BUMP }} --no-git-tag-version
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add package.json
-          git commit -m "chore(release): bump version to $(jq -r .version package.json)"
-          npm install # Install dependencies for the ESLint plugin
-          npm publish --access public
+          npm install
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -42,22 +33,7 @@ jobs:
         id: publish-stylelint
         working-directory: ./stylelint-plugin-brand-detector
         run: |
-          git log --oneline -n 1 HEAD | grep -q '\[major\]' && echo "BUMP=major" >> $GITHUB_ENV
-          git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
-          [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
-
-          echo ${{ env.BUMP }}
-
-          npm version ${{ env.BUMP }} --no-git-tag-version
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add package.json
-          git commit -m "chore(release): bump version to $(jq -r .version package.json)"
-          npm install # Install dependencies for the Stylelint plugin
-          npm publish --access public
+          npm install
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push changes
-        run: |
-          git push origin main
