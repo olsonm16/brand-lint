@@ -22,7 +22,7 @@ jobs:
 
       - name: Determine version bump and publish ESLint plugin
         id: publish-eslint
-        working-directory: ./packages/eslint-plugin-brand-detector
+        working-directory: ./eslint-plugin-brand-detector
         run: |
           git log --oneline -n 1 HEAD | grep -q '\[major\]' && echo "BUMP=major" >> $GITHUB_ENV
           git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
@@ -40,7 +40,7 @@ jobs:
 
       - name: Determine version bump and publish Stylelint plugin
         id: publish-stylelint
-        working-directory: ./packages/stylelint-plugin-brand-detector
+        working-directory: ./stylelint-plugin-brand-detector
         run: |
           git log --oneline -n 1 HEAD | grep -q '\[major\]' && echo "BUMP=major" >> $GITHUB_ENV
           git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
