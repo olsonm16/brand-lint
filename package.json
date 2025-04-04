@@ -1,7 +1,0 @@
-{
-  "private": true,
-  "workspaces": [
-    "eslint-plugin-brand-detector",
-    "stylelint-plugin-brand-detector"
-  ]
-}
