@@ -22,8 +22,9 @@ function rule(primaryOption, secondaryOptions) {
       actual: secondaryOptions,
       possible: {
         brandColors: ['object'],
+        severity: ['warning', 'error'],
       },
-      optional: true,
+      optional: ['severity', 'brandColors'],
     });
 
     if (!validOptions) {

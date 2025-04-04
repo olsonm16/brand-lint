@@ -11,6 +11,20 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 
 
 const ruleFunction = (primaryOption, secondaryOptions, context) => {
+  const validOptions = stylelint.utils.validateOptions(result, ruleName, {
+    actual: primaryOption
+  }, {
+    actual: secondaryOptions,
+    possible: {
+      brandColors: ['object'],
+      severity: ['warning', 'error'],
+    },
+    optional: ['severity', 'brandColors'],
+  });
+
+  if (!validOptions) {
+    return;
+  }
   const brandColorsConfig = (secondaryOptions && secondaryOptions.brandColors) || BRAND_COLORS;
   return (root, result) => {
     root.walkDecls(decl => {
@@ -18,7 +32,7 @@ const ruleFunction = (primaryOption, secondaryOptions, context) => {
       parsedValue.walk((node) => {
         if (node.type === "word") {
           Object.entries(brandColorsConfig).forEach(([hardcodedColor, recommendedColor]) => {
-            if (node.value === hardcodedColor) {
+            if (node.value.toLowerCase() === hardcodedColor.toLowerCase()) {
               stylelint.utils.report({
                 result,
                 ruleName,
