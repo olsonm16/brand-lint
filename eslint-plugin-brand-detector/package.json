@@ -1,0 +1,9 @@
+{
+  "name": "eslint-plugin-brand-detector",
+  "version": "1.0.0",
+  "description": "ESLint plugin to detect branding colors and other content in code",
+  "main": "index.js",
+  "peerDependencies": {
+    "eslint": ">=7.0.0"
+  }
+}
