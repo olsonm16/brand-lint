@@ -1,5 +1,5 @@
 {
-  "name": "@olsonm16/brand-lint-stylelint-plugin-brand-detector",
+  "name": "@olsonm16/stylelint-plugin-brand-detector",
   "version": "1.0.5",
   "description": "StyleLint plugin to detect branding colors hardcoded in CSS/SCSS files",
   "main": "index.js",
