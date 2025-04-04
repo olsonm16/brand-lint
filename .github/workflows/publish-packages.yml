@@ -46,6 +46,8 @@ jobs:
           git log --oneline -n 1 HEAD | grep -q '\[feat\]' && echo "BUMP=minor" >> $GITHUB_ENV
           [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
 
+          echo ${{ env.BUMP }}
+
           npm version ${{ env.BUMP }} --no-git-tag-version
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
