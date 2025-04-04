@@ -20,9 +20,6 @@ jobs:
           node-version: 'lts/*'
           registry-url: 'https://npm.pkg.github.com'
 
-      - name: Install dependencies (root)
-        run: npm install
-
       - name: Determine version bump and publish ESLint plugin
         id: publish-eslint
         working-directory: ./packages/eslint-plugin-my-eslint-rules
@@ -32,12 +29,11 @@ jobs:
           [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
 
           npm version ${{ env.BUMP }} --no-git-tag-version
-
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add package.json
           git commit -m "chore(release): bump version to $(jq -r .version package.json)"
-
+          npm install # Install dependencies for the ESLint plugin
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,12 +47,11 @@ jobs:
           [[ -z "${{ env.BUMP }}" ]] && echo "BUMP=patch" >> $GITHUB_ENV
 
           npm version ${{ env.BUMP }} --no-git-tag-version
-
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add package.json
           git commit -m "chore(release): bump version to $(jq -r .version package.json)"
-
+          npm install # Install dependencies for the Stylelint plugin
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
